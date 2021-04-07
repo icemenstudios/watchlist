@@ -1,0 +1,42 @@
+﻿@page "/checkbox"
+@using Blazored.Typeahead
+@using WatchList.Data
+@inject ApiGetMoviesService MoviesService
+
+<h3>Component1</h3>
+
+<BlazoredTypeahead SearchMethod="searchMovies" @bind-Value="selectedMovie">
+    <SelectedTemplate>
+        @context.Title
+    </SelectedTemplate>
+    <ResultTemplate>
+        @context.Title
+    </ResultTemplate>
+</BlazoredTypeahead>
+
+@if (selectedMovie != null)
+{
+    <p>Selected Film is: @selectedMovie.Title</p>
+}
+
+@code {
+
+    private List<Entertainment> movies = new List<Entertainment>();
+    private Entertainment selectedMovie;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        movies = await MoviesService.GetMovies("Avengers");
+
+    }
+
+    private async Task<IEnumerable<Entertainment>> searchMovies(string searchTerm)
+    {
+
+        return await Task.FromResult(movies.Where(x => x.Title.ToLower().Contains(searchTerm.ToLower())).ToList());
+        
+
+    }
+}

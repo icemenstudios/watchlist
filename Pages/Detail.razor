@@ -1,0 +1,45 @@
+﻿@page "/detail/{id}"
+@using WatchList.Data
+@inject ApiGetMoviesService MoviesService
+@inject NavigationManager NavigationManger
+
+<div @onclick="backToList">terug</div>
+<h3>@selectedMovie.Title</h3>
+<div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+        <div class="col-md-4 text-center">
+            <img class="img-fluid" src="@selectedMovie.Poster" alt="@selectedMovie.Title">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@selectedMovie.Title</h5>
+                <p class="card-text">@selectedMovie.Plot</p>
+                <p class="card-text"><small class="text-muted">Release: @selectedMovie.Year</small></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string id { get; set; }
+
+    bool watchListReturn = true;
+
+    Entertainment selectedMovie = new Entertainment();
+
+    protected override async Task OnInitializedAsync()
+    {
+        selectedMovie = await MoviesService.GetMovie(id);
+    }
+
+    protected void backToList()
+    {
+
+        NavigationManger.NavigateTo("/");
+
+    }
+
+
+}

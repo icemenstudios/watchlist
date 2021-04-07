@@ -1,0 +1,303 @@
+﻿@page "/"
+@using System.Net.Http.Json;
+@using Newtonsoft.Json;
+@using WatchList.Data;
+@using WatchList.Components.Tabs;
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+@inject ApiGetMoviesService MoviesService
+
+<div class="container">
+    <div class="row">
+        <div class="mb-3 col">
+            <label for="searchInput" class="form-label">Search for a title</label>
+            <input type="text" class="form-control" value="@searchTerm" @onchange="GetSearchEvent" @onfocus="() => searchTerm = null">
+        </div>
+    </div>
+    <div class="row">
+        <TabControl @ref="controlTab">
+            <TabPage @ref="searchResult" Text="Search results">
+
+                @if (movies.Count != 0)
+                {
+
+                    <div class="col link">
+                        <ul class="list-unstyled mt-3">
+                            @foreach (Entertainment movie in movies)
+                            {
+                                if (movie.Poster != "N/A")
+                                {
+                                    <li class="media mb-3" @onclick="() => addMovie(movie)">
+                                        <img src="@movie.Poster" class="mr-3 img-fluid" width="64" alt="@movie.Title">
+                                        <div class="media-body">
+                                            <h5 class="mt-0 mb-1">@movie.Title</h5>
+                                            <small>@movie.Type</small><br />
+                                            <small>Release: @movie.Year</small>
+
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        </ul>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="col mt-3">
+                        <p>No result</p>
+                    </div>
+
+
+                }
+            </TabPage>
+            <TabPage @ref="watchListPage" Text="Watch list">
+                <div id="watchlist" class="col-sm">
+
+                    @if (myList.Count != 0)
+                    {
+
+                        <h4 class="mt-3">My watchlist</h4>
+                        <div id="filters" class="btn-group col-sm-12" role="group" aria-label="Basic example">
+                            <button type="button" @onclick='() => orderBy("Title")' class="btn btn-secondary">Title</button>
+                            <button type="button" @onclick='() => orderBy("Runtime")' class="btn btn-secondary">Runtime</button>
+                            <button type="button" @onclick='() => orderBy("Ratings")' class="btn btn-secondary">Ratings</button>
+                        </div>
+                        <ul class="list-unstyled mt-3">
+
+                            @foreach (var item in myList)
+                            {
+
+
+                                <li class="media mb-3">
+                                    <NavLink href="@($"/detail/{item.ImdbID}")">
+                                        <img src="@item.Poster" class="mr-3 img-fluid" width="64" alt="@item.Title">
+                                    </NavLink>
+                                    <div class="media-body">
+                                        <h5 class="mt-0 mb-1"><NavLink href="@($"/detail/{item.ImdbID}")">@item.Title</NavLink></h5>
+
+                                        <small>@item.Runtime</small> |
+                                        <small>
+
+                                        </small>
+
+                                        <button @onclick="() => deleteMovie(item)" class="btn btn-danger float-right">Delete</button>
+                                    </div>
+                                </li>
+
+                            }
+
+
+                        </ul>
+                    }
+                </div>
+    
+            </TabPage>
+        </TabControl>
+@*@if (movies.Count != 0)
+    {
+
+        <div class="col link">
+            <h4>Search result:</h4>
+            <ul class="list-unstyled mt-3">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                </div>
+                @foreach (Entertainment movie in movies)
+                {
+                    if (movie.Poster != "N/A")
+                    {
+                        <li class="media mb-3" @onclick="() => addMovie(movie)" onmouseup="document.getElementById('watchlist').scrollIntoView({behavior:'smooth'})">
+                            <img src="@movie.Poster" class="mr-3 img-fluid" width="64" alt="@movie.Title">
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1">@movie.Title</h5>
+                                <small>@movie.Type</small><br />
+                                <small>Release: @movie.Year</small>
+
+                            </div>
+                        </li>
+                    }
+                }
+            </ul>
+
+        </div>
+    }
+    else
+    {
+        <div class="col">
+            <p>No result</p>
+        </div>
+    }*@
+@*<div id="watchlist" class="col-sm">
+
+    @if (myList.Count != 0)
+    {
+
+        <h4>My watchlist</h4>
+        <div class="btn-group col" role="group" aria-label="Basic example">
+            <button type="button" @onclick='() => orderBy("Title")' class="btn btn-secondary">Title</button>
+            <button type="button" @onclick='() => orderBy("Runtime")' class="btn btn-secondary">Runtime</button>
+            <button type="button" @onclick='() => orderBy("Ratings")' class="btn btn-secondary">Ratings</button>
+        </div>
+        <ul class="list-unstyled mt-3">
+
+            @foreach (var item in myList)
+            {
+
+
+                <li class="media mb-3">
+                    <NavLink href="@($"/detail/{item.ImdbID}")">
+                        <img src="@item.Poster" class="mr-3 img-fluid" width="64" alt="@item.Title">
+                    </NavLink>
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1"><NavLink href="@($"/detail/{item.ImdbID}")">@item.Title</NavLink></h5>
+
+                        <small>@item.Runtime</small> |
+                        <small>
+
+                        </small>
+
+                        <button @onclick="() => deleteMovie(item)" class="btn btn-danger float-right">Delete</button>
+                    </div>
+                </li>
+
+            }
+
+
+        </ul>
+    }
+</div>*@
+    </div>
+</div>
+@code {
+    private List<Entertainment> movies = new List<Entertainment>();
+    List<Entertainment> myList = new List<Entertainment>();
+    string searchTerm = "";
+    bool toggle = true;
+    bool watchListReturn = false;
+
+    private TabControl controlTab;
+    private TabPage watchListPage;
+    private TabPage searchResult;
+
+
+
+    async void GetSearchEvent(ChangeEventArgs args)
+    {
+        searchTerm = args.Value.ToString();
+        if (searchTerm != "" || searchTerm != null)
+        {
+            movies = await MoviesService.GetMovies(searchTerm);
+        }
+        else
+        {
+            movies = null;
+        }
+        controlTab.ActivatePage(searchResult);
+        StateHasChanged();
+    }
+    [Parameter]
+    public EventCallback onAddList { get; set; }
+
+    private async Task addMovie(Entertainment e)
+    {
+        Entertainment selectedMovie = new Entertainment();
+
+        selectedMovie = await MoviesService.GetMovie(e.ImdbID);
+        myList.Add(selectedMovie);
+        movies.Remove(e);
+
+        await ProtectedSessionStore.SetAsync("myList", myList);
+
+        controlTab.ActivatePage(watchListPage);
+
+
+    }
+
+    private async Task deleteMovie(Entertainment e)
+    {
+        myList.Remove(e);
+        movies.Add(e);
+        await ProtectedSessionStore.SetAsync("myList", myList);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ProtectedSessionStore.GetAsync<List<Entertainment>>("myList");
+        if (result.Value != null)
+        {
+            myList = result.Value;
+            StateHasChanged();
+        }
+
+        if(watchListReturn == true)
+        {
+            controlTab.ActivatePage(watchListPage);
+        }
+
+    }
+
+
+    private async Task orderBy(string orderName)
+    {
+        toggle = !toggle;
+
+        switch (orderName)
+        {
+            case "Runtime":
+                if (toggle)
+                {
+                    myList = myList.OrderBy(x => int.Parse(x.Runtime.Replace("min", ""))).ToList();
+
+                }
+                else
+                {
+                    myList = myList.OrderByDescending(x => int.Parse(x.Runtime.Replace("min", ""))).ToList();
+
+                }
+
+                break;
+            case "Title":
+                if (toggle)
+                {
+                    myList = myList.OrderBy(x => x.Title).ToList();
+                }
+                else
+                {
+                    myList = myList.OrderByDescending(x => x.Title).ToList();
+                }
+                break;
+            case "Ratings":
+                if (toggle)
+                {
+                    myList = myList.OrderBy(x => x.Ratings).ToList();
+                }
+                else
+                {
+                    myList = myList.OrderByDescending(x => x.Ratings).ToList();
+                }
+                break;
+            default:
+                myList = myList.OrderBy(x => x.Title).ToList();
+                break;
+        }
+
+        await ProtectedSessionStore.SetAsync("myList", myList);
+    }
+
+
+}
