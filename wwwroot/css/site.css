@@ -50,7 +50,13 @@ a, .btn-link {
     }
 
 
-
+.link {
+    cursor:pointer;
+    
+}
+    .link:hover {
+        text-decoration: underline;
+    }
  
 @media (max-width: 767.98px) {
 

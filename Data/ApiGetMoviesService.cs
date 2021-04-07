@@ -91,25 +91,7 @@ namespace WatchList.Data
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
                 selectedMovie = JsonConvert.DeserializeObject<Entertainment>(body);
-                //if (objectBody.Response == "True")
-                //{
-                //    try
-                //    {
-                //        selectedMovie = new Entertainment(objectBody.Search);
-
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        Console.WriteLine(ex);
-                //    }
-                //}
-                //else
-                //{
-                //    watcherList = null;
-                //}
-
-
-
+              
             }
 
             return selectedMovie;

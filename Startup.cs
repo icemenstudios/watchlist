@@ -34,7 +34,6 @@ namespace WatchList
             services.Configure<ApiSettings>(Configuration.GetSection("WatchListApi"));
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<ApiGetMoviesService>();
         }
 
