@@ -33,6 +33,7 @@
     ".NETCoreApp,Version=v5.0": {
       "WatchList/1.0.0": {
         "dependencies": {
+          "51Degrees.mobi-core": "3.2.21.1",
           "Blazored.Typeahead": "4.6.0",
           "Newtonsoft.Json": "13.0.1",
           "Microsoft.AspNetCore.Antiforgery": "5.0.0.0",
@@ -324,6 +325,17 @@
         },
         "compile": {
           "WatchList.dll": {}
+        }
+      },
+      "51Degrees.mobi-core/3.2.21.1": {
+        "runtime": {
+          "lib/netstandard1.6/FiftyOne.Foundation.dll": {
+            "assemblyVersion": "3.2.21.1",
+            "fileVersion": "3.2.21.1"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.6/FiftyOne.Foundation.dll": {}
         }
       },
       "Blazored.Typeahead/4.6.0": {
@@ -2101,6 +2113,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "51Degrees.mobi-core/3.2.21.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-46+jFUwHojVEZ96Ra22BtjT2VkRnafBWnggz/Lx8LFhJsj1bnXNJtVggdGewu2FrrTGpzegLhxnQWNgME65lKg==",
+      "path": "51degrees.mobi-core/3.2.21.1",
+      "hashPath": "51degrees.mobi-core.3.2.21.1.nupkg.sha512"
     },
     "Blazored.Typeahead/4.6.0": {
       "type": "package",

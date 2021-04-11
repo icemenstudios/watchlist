@@ -12,9 +12,31 @@ namespace WatchList.Models
         public string Type { get; set; }
         public string Poster { get; set; }
         public string Trailer { get; set; }
-        public Object Ratings { get; set; }
         public string Runtime { get; set; }
         public string Plot { get; set; }
+        public Rating [] Ratings { get; set; }
+        private string _rate;
+        private string GetRatings()
+        {
+
+            if (Ratings != null)
+            {
+                for (int i = 0; i < Ratings.Length; i++)
+                {
+                    _rate = Ratings[0].Value;
+                }
+            }
+           
+
+            return _rate;
+        }
+
+        public string Rate
+        {
+            get { return GetRatings(); }
+            
+        }
+        
 
         public static implicit operator Entertainment(List<Entertainment> v)
         {
@@ -22,5 +44,14 @@ namespace WatchList.Models
         }
 
         
+
+
+
+    }
+
+    public class Rating
+    {
+        public string Source { get; set; }
+        public string Value { get; set; }
     }
 }

@@ -60,3 +60,4 @@
 /Users/Icemen/Projects/PracticeProjects/WatchList/obj/Debug/net5.0/ref/WatchList.dll
 /Users/Icemen/Projects/PracticeProjects/WatchList/obj/Debug/net5.0/WatchList.pdb
 /Users/Icemen/Projects/PracticeProjects/WatchList/obj/Debug/net5.0/WatchList.genruntimeconfig.cache
+/Users/Icemen/Projects/PracticeProjects/WatchList/bin/Debug/net5.0/FiftyOne.Foundation.dll

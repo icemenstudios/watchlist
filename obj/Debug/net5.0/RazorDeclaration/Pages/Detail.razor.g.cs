@@ -96,6 +96,13 @@ using WatchList.Data;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 3 "/Users/Icemen/Projects/PracticeProjects/WatchList/Pages/Detail.razor"
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/detail/{id}")]
     public partial class Detail : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -105,13 +112,11 @@ using WatchList.Data;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 23 "/Users/Icemen/Projects/PracticeProjects/WatchList/Pages/Detail.razor"
+#line 29 "/Users/Icemen/Projects/PracticeProjects/WatchList/Pages/Detail.razor"
        
 
     [Parameter]
     public string id { get; set; }
-
-    bool watchListReturn = true;
 
     Entertainment selectedMovie = new Entertainment();
 
@@ -122,7 +127,7 @@ using WatchList.Data;
 
     protected void backToList()
     {
-
+        ProtectedSessionStore.SetAsync("watchListReturn", true);
         NavigationManger.NavigateTo("/");
 
     }
@@ -132,6 +137,7 @@ using WatchList.Data;
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private ProtectedSessionStorage ProtectedSessionStore { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManger { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private ApiGetMoviesService MoviesService { get; set; }
     }

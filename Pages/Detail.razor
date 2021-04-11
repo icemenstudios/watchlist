@@ -1,7 +1,9 @@
 ﻿@page "/detail/{id}"
 @using WatchList.Data
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @inject ApiGetMoviesService MoviesService
 @inject NavigationManager NavigationManger
+@inject ProtectedSessionStorage ProtectedSessionStore
 
 <div class="link" @onclick="backToList">terug</div>
 <h3>@selectedMovie.Title</h3>
@@ -15,6 +17,10 @@
                 <h5 class="card-title">@selectedMovie.Title</h5>
                 <p class="card-text">@selectedMovie.Plot</p>
                 <p class="card-text"><small class="text-muted">Release: @selectedMovie.Year</small></p>
+                <small>Rating: @selectedMovie.Rate
+                  
+
+                </small>
             </div>
         </div>
     </div>
@@ -25,8 +31,6 @@
     [Parameter]
     public string id { get; set; }
 
-    bool watchListReturn = true;
-
     Entertainment selectedMovie = new Entertainment();
 
     protected override async Task OnInitializedAsync()
@@ -36,7 +40,7 @@
 
     protected void backToList()
     {
-
+        ProtectedSessionStore.SetAsync("watchListReturn", true);
         NavigationManger.NavigateTo("/");
 
     }

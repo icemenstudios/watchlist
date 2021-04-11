@@ -9,7 +9,6 @@ namespace WatchList.Pages
     #line hidden
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
 #nullable restore
@@ -90,15 +89,8 @@ using WatchList.Models;
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "/Users/Icemen/Projects/PracticeProjects/WatchList/Pages/Index.razor"
-using System.Net.Http.Json;
-
-#line default
-#line hidden
-#nullable disable
-#nullable restore
 #line 3 "/Users/Icemen/Projects/PracticeProjects/WatchList/Pages/Index.razor"
-using Newtonsoft.Json;
+using System.Linq;
 
 #line default
 #line hidden
@@ -118,7 +110,7 @@ using WatchList.Components.Tabs;
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "/Users/Icemen/Projects/PracticeProjects/WatchList/Pages/Index.razor"
+#line 7 "/Users/Icemen/Projects/PracticeProjects/WatchList/Pages/Index.razor"
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 #line default
@@ -133,8 +125,9 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 186 "/Users/Icemen/Projects/PracticeProjects/WatchList/Pages/Index.razor"
+#line 188 "/Users/Icemen/Projects/PracticeProjects/WatchList/Pages/Index.razor"
        
+
     private List<Entertainment> movies = new List<Entertainment>();
     List<Entertainment> myList = new List<Entertainment>();
     string searchTerm = "";
@@ -144,6 +137,8 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
     private TabControl controlTab;
     private TabPage watchListPage;
     private TabPage searchResult;
+
+   
 
 
 
@@ -189,13 +184,14 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
     protected override async Task OnInitializedAsync()
     {
         var result = await ProtectedSessionStore.GetAsync<List<Entertainment>>("myList");
+        var resultTab = await ProtectedSessionStore.GetAsync<bool>("watchListReturn");
         if (result.Value != null)
         {
             myList = result.Value;
             StateHasChanged();
         }
 
-        if(watchListReturn == true)
+        if (resultTab.Value != false)
         {
             controlTab.ActivatePage(watchListPage);
         }
@@ -235,11 +231,11 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
             case "Ratings":
                 if (toggle)
                 {
-                    myList = myList.OrderBy(x => x.Ratings).ToList();
+                    myList = myList.OrderBy(x => decimal.Parse(x.Rate.Replace("/10", ""))).ToList();
                 }
                 else
                 {
-                    myList = myList.OrderByDescending(x => x.Ratings).ToList();
+                    myList = myList.OrderByDescending(x => decimal.Parse(x.Rate.Replace("/10", ""))).ToList();
                 }
                 break;
             default:
